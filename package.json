@@ -1,0 +1,33 @@
+{
+  "name": "@miup/nest-common",
+  "version": "1.0.4",
+  "description": "",
+  "main": "bin/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tw949561391/nest-common.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tw949561391/nest-common/issues"
+  },
+  "homepage": "https://github.com/tw949561391/nest-common#readme",
+  "dependencies": {
+    "log4js": "^3.0.6",
+    "read-pkg": "^4.0.1",
+    "dotenv": "^6.2.0",
+    "dotenv-extended": "^2.3.0"
+  },
+  "devDependencies": {
+    "rxjs": "^6.3.3",
+    "@nestjs/core": "^5.5.0",
+    "@nestjs/common": "^5.5.0",
+    "reflect-metadata": "^0.1.12",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.2.2"
+  }
+}
