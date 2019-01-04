@@ -3,7 +3,13 @@ import {FactoryProvider, ModuleMetadata} from "@nestjs/common/interfaces";
 import {OauthStoreInterface} from "./store/store.interface";
 import {OauthService} from "./service/oauth.service";
 
-export const OAUTH_MODULE_OPTIONS = 'OAUTH_MODULE_OPTIONS'
+export const OAUTH_MODULE_OPTIONS = 'OAUTH_MODULE_OPTIONS';
+export * from './common/oauth-type.enum'
+export * from './enity/data'
+export * from './enity/entity'
+export * from './service/oauth.interface'
+export * from './service/oauth.service'
+export * from './store/store.interface'
 
 export interface OauthModuleOptions {
     store: OauthStoreInterface,
@@ -35,17 +41,17 @@ export class OauthModule {
                 return new OauthService(option.store, option.logger)
             },
             inject: [OAUTH_MODULE_OPTIONS]
-        }
+        };
         return {
             module: OauthModule,
             imports: options.imports || [],
             providers: [
                 ...this.createAsyncProviders(options),
+                oauthService,
                 ...(options.extraProviders || []),
             ],
         };
     }
-
 
     private static createAsyncProviders(options: OauthModuleAsyncOptions): Provider[] {
         if (options.useExisting || options.useFactory) {
