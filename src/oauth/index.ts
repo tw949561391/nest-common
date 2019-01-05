@@ -1,12 +1,13 @@
 import {DynamicModule, Global, Inject, Module, Provider, Type} from "@nestjs/common";
 import {FactoryProvider, ModuleMetadata} from "@nestjs/common/interfaces";
-import {OauthStoreInterface} from "./store/store.interface";
 import {OauthService} from "./service/oauth.service";
+import {PassportModule} from "@nestjs/passport";
+import {JwtModule} from '@nestjs/jwt';
 
 export const OAUTH_MODULE_OPTIONS = 'OAUTH_MODULE_OPTIONS'
 
 export interface OauthModuleOptions {
-    store: OauthStoreInterface,
+    store: any,
     logger?: any
 }
 
@@ -28,21 +29,33 @@ export interface OauthModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'>
 @Global()
 @Module({})
 export class OauthModule {
+
+
     public static registerAsync(options: OauthModuleAsyncOptions): DynamicModule {
-        const oauthService: FactoryProvider = {
+        const oauthServiceProvider: FactoryProvider = {
             provide: OauthService,
             useFactory: (option: OauthModuleOptions) => {
                 return new OauthService(option.store, option.logger)
             },
             inject: [OAUTH_MODULE_OPTIONS]
-        }
+        };
         return {
             module: OauthModule,
-            imports: options.imports || [],
+            imports: [...options.imports,
+                PassportModule.register({defaultStrategy: 'jwt'}),
+                JwtModule.register({
+                    secretOrPrivateKey: 'secretKey',
+                    signOptions: {
+                        expiresIn: 3600,
+                    },
+                })
+            ],
             providers: [
+                oauthServiceProvider,
                 ...this.createAsyncProviders(options),
                 ...(options.extraProviders || []),
             ],
+            exports: [oauthServiceProvider]
         };
     }
 

@@ -10,7 +10,6 @@ import {ForbiddenException} from "@nestjs/common";
 import {OauthType} from "../common/oauth-type.enum";
 import {CodeData, TokenData} from "../enity/data";
 import {OauthClient, OauthToken, OauthUser} from "../enity/entity";
-import {Log4j} from "../../log4j";
 
 export class OauthService implements OauthInterface {
     private store: OauthStoreInterface;
@@ -21,6 +20,7 @@ export class OauthService implements OauthInterface {
                 logger: any) {
         this.store = store;
         this.logger = logger || defaultLog;
+        console.log('creat')
     }
 
     async authorizationCode(params: AuthorizationCodeParams, allParams?: any): Promise<string> {
