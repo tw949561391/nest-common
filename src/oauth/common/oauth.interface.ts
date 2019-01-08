@@ -1,5 +1,24 @@
-import {OauthType} from "../common/oauth-type.enum";
-import {OauthToken} from "../enity/entity";
+import {CodeData, OauthClient, OauthToken, OauthType, OauthUser, TokenData} from "..";
+
+
+export interface TokenStoreInterface {
+    buildAndStoreToken(client: OauthClient, user: OauthUser, allParams: any): Promise<OauthToken>;
+
+    getRefreshTokenData(refresh_token: string, allParams: any): Promise<TokenData>;
+
+    buildAndSaveCode(user: OauthUser, client: OauthClient, scope: string, allParams: any): Promise<string>;
+
+    getCodeData(code: string, allParams: any): Promise<CodeData>;
+}
+
+export interface OauthStoreInterface {
+    getUser(username: string, password: string, allParams: any): Promise<OauthUser>;
+
+    getClient(client_id: string, scope: string, allParams?: any): Promise<OauthClient>;
+
+    getClientAndValidate(client_id: string, client_secret: string, scope: string, allParams?: any): Promise<OauthClient>;
+}
+
 
 export interface OauthInterface {
     authorizationCode(params: AuthorizationCodeParams, allParams?: any): Promise<string>;

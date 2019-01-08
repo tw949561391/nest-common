@@ -1,39 +1,41 @@
+import {UnauthorizedException} from "@nestjs/common";
+import {OauthType} from "../common/oauth-type.enum";
+import {CodeData, TokenData} from "../enity/data";
+import {OauthClient, OauthToken, OauthUser} from "../enity/entity";
 import {
     AuthorizationCodeParams,
     OauthCodeTokenParams,
     OauthInterface,
-    PasswordTokenParams,
-    RefreshTokenParams
-} from "./oauth.interface";
-import {OauthStoreInterface} from "../store/store.interface";
-import {ForbiddenException} from "@nestjs/common";
-import {OauthType} from "../common/oauth-type.enum";
-import {CodeData, TokenData} from "../enity/data";
-import {OauthClient, OauthToken, OauthUser} from "../enity/entity";
+    OauthStoreInterface, PasswordTokenParams, RefreshTokenParams,
+    TokenStoreInterface
+} from "../common/oauth.interface";
 
 export class OauthService implements OauthInterface {
-    private store: OauthStoreInterface;
+    private oauthStore: OauthStoreInterface;
+    private tokenStore: TokenStoreInterface;
 
     private logger?: any;
 
-    constructor(store: OauthStoreInterface,
+    constructor(oauthStore: OauthStoreInterface,
+                tokenStore: TokenStoreInterface,
                 logger: any) {
-        this.store = store;
-        this.logger = logger || defaultLog;
+        this.oauthStore = oauthStore;
+        this.tokenStore = tokenStore;
+        this.logger = logger || console;
         console.log('creat')
     }
 
     async authorizationCode(params: AuthorizationCodeParams, allParams?: any): Promise<string> {
         this.logger.debug('start authorizationCode');
-        const client: OauthClient = await this.store.getClient(params.client_id, params.scope, allParams);
+        const client: OauthClient = await this.oauthStore.getClient(params.client_id, params.scope, allParams);
         if (!client) {
-            throw new ForbiddenException('client invalidate')
+            throw new UnauthorizedException('client invalidate')
         }
-        const user: OauthUser = await this.store.getUser(params.username, params.password, allParams);
+        const user: OauthUser = await this.oauthStore.getUser(params.username, params.password, allParams);
         if (!user) {
-            throw new ForbiddenException('user invalidate')
+            throw new UnauthorizedException('user invalidate')
         }
-        const codeStr: string = await this.store.buildAndSaveCode(user, client, params.scope, allParams);
+        const codeStr: string = await this.tokenStore.buildAndSaveCode(user, client, params.scope, allParams);
         this.logger.debug('end authorizationCode');
         return codeStr;
     }
@@ -50,52 +52,40 @@ export class OauthService implements OauthInterface {
                 return await this._RefreshToken(params as RefreshTokenParams, allParams)
                 break;
             default:
-                throw new ForbiddenException('grant_type not support');
+                throw new UnauthorizedException('grant_type not support');
                 break;
         }
     }
 
     private async _AuthorizationCodeToken(params: OauthCodeTokenParams, allParams?: any): Promise<OauthToken> {
         this.logger.debug('start AuthorizationCodeToken')
-        const codeData: CodeData = await this.store.getCodeData(params.code, allParams);
-        let client: OauthClient = await this.store.getClientAndValidate(codeData.client.clientId, params.client_secret, codeData.scope, allParams);
+        const codeData: CodeData = await this.tokenStore.getCodeData(params.code, allParams);
+        let client: OauthClient = await this.oauthStore.getClientAndValidate(codeData.client.clientId, params.client_secret, codeData.scope, allParams);
         if (!client) {
-            throw new ForbiddenException('client invalidate');
+            throw new UnauthorizedException('client invalidate');
         }
         let user: OauthUser = codeData.user;
-        return await this.store.buildAndStoreToken(client, user, allParams);
+        return await this.tokenStore.buildAndStoreToken(client, user, allParams);
     }
 
     private async _PasswordToken(params: PasswordTokenParams, allParams?: any): Promise<OauthToken> {
         this.logger.debug('start PasswordToken');
-        const client: OauthClient = await this.store.getClientAndValidate(params.client_id, params.client_secret, params.scope, allParams);
+        const client: OauthClient = await this.oauthStore.getClientAndValidate(params.client_id, params.client_secret, params.scope, allParams);
         if (!client) {
-            throw new ForbiddenException('client invalidate')
+            throw new UnauthorizedException('client invalidate')
         }
-        const user: OauthUser = await this.store.getUser(params.username, params.password, allParams);
+        const user: OauthUser = await this.oauthStore.getUser(params.username, params.password, allParams);
         if (!user) {
-            throw new ForbiddenException('user invalidate')
+            throw new UnauthorizedException('user invalidate')
         }
-        return await this.store.buildAndStoreToken(client, user, allParams);
+        return await this.tokenStore.buildAndStoreToken(client, user, allParams);
     }
 
     private async _RefreshToken(params: RefreshTokenParams, allParams?: any): Promise<OauthToken> {
         this.logger.debug('start RefreshToken');
-        const refreshTokenData: TokenData = await this.store.getRefreshTokenData(params.refresh_token, allParams);
-        return await this.store.buildAndStoreToken(refreshTokenData.client, refreshTokenData.user, allParams);
+        const refreshTokenData: TokenData = await this.tokenStore.getRefreshTokenData(params.refresh_token, allParams);
+        return await this.tokenStore.buildAndStoreToken(refreshTokenData.client, refreshTokenData.user, allParams);
     }
 }
 
-const defaultLog = {
-    debug: function (...attr) {
-        console.log(attr)
-    },
-    info: function (...attr) {
-        console.log(attr)
 
-    },
-    error: function (...attr) {
-        console.log(attr)
-
-    }
-}

@@ -1,20 +1,21 @@
-import {INestApplication, Inject, Injectable, Module} from "@nestjs/common";
-import {OauthModule, OauthModuleAsyncOptions} from "../src/oauth";
+import {INestApplication, Injectable, Module} from "@nestjs/common";
+import {OauthModule, OauthStoreInterface} from "../src/oauth";
 import {NestFactory} from "@nestjs/core";
-import {OauthService} from "../src/oauth/service/oauth.service";
-import {OauthStoreInterface} from "../src/oauth/store/store.interface";
-import {OauthClient, OauthToken, OauthUser} from "../src/oauth/enity/entity";
-import {CodeData, TokenData} from "../src/oauth/enity/data";
+import {OauthClient, OauthUser} from "../src/oauth/enity/entity";
 import {Log4j, Log4jModule} from "../src/log4j";
 
 @Injectable()
-class OauthStore implements OauthStoreInterface {
-    buildAndSaveCode(user: OauthUser, client: OauthClient, scope: string, allParams: any): Promise<string> {
-        return undefined;
+export class TestDemoClass {
+    constructor() {
+        console.log('create TestDemoClass')
     }
 
-    buildAndStoreToken(client: OauthClient, user: OauthUser, allParams: any): Promise<OauthToken> {
-        return undefined;
+}
+
+@Injectable()
+export class OauthStoreService implements OauthStoreInterface {
+    constructor(private test: TestDemoClass) {
+        console.log('create OauthStoreService')
     }
 
     getClient(client_id: string, scope: string, allParams?: any): Promise<OauthClient> {
@@ -25,30 +26,38 @@ class OauthStore implements OauthStoreInterface {
         return undefined;
     }
 
-    getCodeData(code: string, allParams: any): Promise<CodeData> {
-        return undefined;
-    }
-
-    getRefreshTokenData(refresh_token: string, allParams: any): Promise<TokenData> {
-        return undefined;
-    }
-
     getUser(username: string, password: string, allParams: any): Promise<OauthUser> {
         return undefined;
     }
 
 }
 
+
 @Module({
     imports: [
         Log4jModule.register(),
+        OauthModule.registerAsync({
+            extraProviders: [OauthStoreService, TestDemoClass],
+            useFactory: (oauthStore: OauthStoreService, log: Log4j) => {
+                console.log(oauthStore)
+                return {
+                    oauthSore: oauthStore,
+                    logger: log,
+                    jwt: {
+                        secretOrPrivateKey: 'secretKey',
+                        signOptions: {
+                            expiresIn: 3600,
+                        }
+                    }
+                };
+            },
+            inject: [OauthStoreService, Log4j]
+        })
     ],
-    providers: []
+    providers: [],
+    exports: []
 })
 export class AppModule {
-    constructor(private oauthService: OauthService) {
-        console.log(oauthService)
-    }
 }
 
 
