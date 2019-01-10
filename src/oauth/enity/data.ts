@@ -1,13 +1,16 @@
 import {OauthClient, OauthUser} from "./entity";
 
-export class CodeData {
+export interface CodeData {
     client: OauthClient;
     user: OauthUser;
     scope: string;
+    signTime: Date
+
 }
 
-export class TokenData {
+export interface TokenData {
     client: OauthClient;
     user: OauthUser;
-    scope: string
+    scope: string,
+    signTime: Date
 }

@@ -65,7 +65,7 @@ export class OauthService implements OauthInterface {
             throw new UnauthorizedException('client invalidate');
         }
         let user: OauthUser = codeData.user;
-        return await this.tokenStore.buildAndStoreToken(client, user, allParams);
+        return await this.tokenStore.buildAndStoreToken(client, user, codeData.scope, allParams);
     }
 
     private async _PasswordToken(params: PasswordTokenParams, allParams?: any): Promise<OauthToken> {
@@ -78,13 +78,13 @@ export class OauthService implements OauthInterface {
         if (!user) {
             throw new UnauthorizedException('user invalidate')
         }
-        return await this.tokenStore.buildAndStoreToken(client, user, allParams);
+        return await this.tokenStore.buildAndStoreToken(client, user, params.scope, allParams);
     }
 
     private async _RefreshToken(params: RefreshTokenParams, allParams?: any): Promise<OauthToken> {
         this.logger.debug('start RefreshToken');
         const refreshTokenData: TokenData = await this.tokenStore.getRefreshTokenData(params.refresh_token, allParams);
-        return await this.tokenStore.buildAndStoreToken(refreshTokenData.client, refreshTokenData.user, allParams);
+        return await this.tokenStore.buildAndStoreToken(refreshTokenData.client, refreshTokenData.user, refreshTokenData.scope, allParams);
     }
 }
 

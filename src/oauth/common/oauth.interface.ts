@@ -2,7 +2,7 @@ import {CodeData, OauthClient, OauthToken, OauthType, OauthUser, TokenData} from
 
 
 export interface TokenStoreInterface {
-    buildAndStoreToken(client: OauthClient, user: OauthUser, allParams: any): Promise<OauthToken>;
+    buildAndStoreToken(client: OauthClient, user: OauthUser, scopes: string, allParams: any): Promise<OauthToken>;
 
     getRefreshTokenData(refresh_token: string, allParams: any): Promise<TokenData>;
 

@@ -1,52 +1,24 @@
-import {INestApplication, Injectable, Module} from "@nestjs/common";
-import {OauthModule, OauthStoreInterface} from "../src/oauth";
+import {INestApplication, Module} from "@nestjs/common";
+import {OauthModule} from "../src/oauth";
 import {NestFactory} from "@nestjs/core";
-import {OauthClient, OauthUser} from "../src/oauth/enity/entity";
 import {Log4j, Log4jModule} from "../src/log4j";
-
-@Injectable()
-export class TestDemoClass {
-    constructor() {
-        console.log('create TestDemoClass')
-    }
-
-}
-
-@Injectable()
-export class OauthStoreService implements OauthStoreInterface {
-    constructor(private test: TestDemoClass) {
-        console.log('create OauthStoreService')
-    }
-
-    getClient(client_id: string, scope: string, allParams?: any): Promise<OauthClient> {
-        return undefined;
-    }
-
-    getClientAndValidate(client_id: string, client_secret: string, scope: string, allParams?: any): Promise<OauthClient> {
-        return undefined;
-    }
-
-    getUser(username: string, password: string, allParams: any): Promise<OauthUser> {
-        return undefined;
-    }
-
-}
+import {OauthStoreService} from "./controller/oauth.store";
+import {OauthController} from "./controller/oauth.controller";
 
 
 @Module({
     imports: [
         Log4jModule.register(),
         OauthModule.registerAsync({
-            extraProviders: [OauthStoreService, TestDemoClass],
+            extraProviders: [OauthStoreService],
             useFactory: (oauthStore: OauthStoreService, log: Log4j) => {
-                console.log(oauthStore)
                 return {
                     oauthSore: oauthStore,
                     logger: log,
                     jwt: {
                         secretOrPrivateKey: 'secretKey',
                         signOptions: {
-                            expiresIn: 3600,
+                            expiresIn: 360000,
                         }
                     }
                 };
@@ -55,7 +27,8 @@ export class OauthStoreService implements OauthStoreInterface {
         })
     ],
     providers: [],
-    exports: []
+    exports: [],
+    controllers: [OauthController]
 })
 export class AppModule {
 }

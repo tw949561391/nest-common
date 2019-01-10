@@ -6,11 +6,9 @@ import {JwtStore} from "./service/jwt.store";
 import {JwtModule, JwtModuleAsyncOptions, JwtModuleOptions} from '@nestjs/jwt';
 import {PassportModule} from "@nestjs/passport";
 import {JwtStrategy} from "./service/jwt.strategy";
-import {OauthStoreService, TestDemoClass} from "../../test";
 
 export const OAUTH_MODULE_OPTIONS = 'OAUTH_MODULE_OPTIONS';
 export const OAUTH_MODULE_TOKEN_STORE = 'OAUTH_MODULE_TOKEN_STORE';
-export const OAUTH_MODULE_OAUTH_STORE = 'OAUTH_MODULE_OAUTH_STORE';
 
 
 export interface OauthModuleOptions {
@@ -39,7 +37,7 @@ export interface OauthModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'>
 export class OauthModule {
     public static registerAsync(options: OauthModuleAsyncOptions): DynamicModule {
         const oauthServiceProvider: FactoryProvider = {
-            provide: OAUTH_MODULE_OAUTH_STORE,
+            provide: OauthService,
             useFactory: (option: OauthModuleOptions, tokenStore: TokenStoreInterface) => {
                 return new OauthService(option.oauthSore, tokenStore, option.logger)
             },
