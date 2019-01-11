@@ -9,7 +9,7 @@ yarn-error.log*
 .idea
 package-lock.json
 .vscode
-
+bin
 # Runtime data
 pids
 *.pid

@@ -34,7 +34,7 @@ export interface OauthServerModuleOptions extends OauthModuleOptions {
 }
 
 export interface OauthClientModuleOptions extends OauthModuleOptions {
-    fromRequest: Array<'body' | 'header' | 'query' | 'cookie'>,
+    fromRequest?: Array<'body' | 'header' | 'query' | 'cookie'>,
     defaultScopes?: string;
     jwt?: VerifyJwtOptions
 }
