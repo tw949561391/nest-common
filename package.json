@@ -1,10 +1,10 @@
 {
   "name": "@miup/nest-common",
-  "version": "1.0.5",
+  "version": "1.0.10",
   "description": "",
   "main": "bin/index.js",
   "scripts": {
-    "build": "tsc"
+    "buildAndPublish": "tsc&&npm publish"
   },
   "repository": {
     "type": "git",
@@ -19,7 +19,6 @@
   "dependencies": {
     "@nestjs/jwt": "^0.2.1",
     "@nestjs/passport": "^5.1.0",
-    "@types/crypto-js": "^3.1.43",
     "crypto-js": "^3.1.9-1",
     "dotenv": "^6.2.0",
     "dotenv-extended": "^2.3.0",
@@ -31,6 +30,7 @@
     "read-pkg": "^4.0.1"
   },
   "devDependencies": {
+    "@types/crypto-js": "^3.1.43",
     "@nestjs/common": "^5.5.0",
     "@nestjs/core": "^5.5.0",
     "@nestjs/testing": "^5.5.0",

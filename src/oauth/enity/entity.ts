@@ -5,7 +5,7 @@ export class OauthClient {
 export class OauthToken {
     access_token: string;
     refresh_token: string;
-    expires_in: number;
+    expires_in: any;
 }
 
 export class OauthUser {

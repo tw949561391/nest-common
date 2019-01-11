@@ -1,5 +1,5 @@
 import {Injectable} from "@nestjs/common";
-import {OauthClient, OauthStoreInterface, OauthUser} from "../../src";
+import {OauthClient, OauthStoreInterface} from "../../src";
 
 @Injectable()
 export class OauthStoreService implements OauthStoreInterface {

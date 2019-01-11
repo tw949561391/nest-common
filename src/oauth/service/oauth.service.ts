@@ -22,7 +22,6 @@ export class OauthService implements OauthInterface {
         this.oauthStore = oauthStore;
         this.tokenStore = tokenStore;
         this.logger = logger || console;
-        console.log('creat')
     }
 
     async authorizationCode(params: AuthorizationCodeParams, allParams?: any): Promise<string> {

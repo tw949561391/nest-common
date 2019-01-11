@@ -5,8 +5,10 @@ import {Principle} from "../enity/principle";
 
 
 export class JwtStore implements TokenStoreInterface {
+    private options: JwtModuleOptions;
 
-    constructor(private options: JwtModuleOptions) {
+    constructor(options: JwtModuleOptions) {
+        this.options = options;
     }
 
     buildAndSaveCode(user: OauthUser, client: OauthClient, scope: string, allParams: any): Promise<string> {
@@ -18,7 +20,7 @@ export class JwtStore implements TokenStoreInterface {
                     scope: scope || '',
                     signTime: new Date()
                 };
-                const code = this.sign(codeDate);
+                const code = jwt.sign(codeDate, this.options.secretOrPrivateKey, this.options.signOptions);
                 resolve(code);
             } catch (e) {
                 reject(e)
@@ -43,12 +45,12 @@ export class JwtStore implements TokenStoreInterface {
                     scope: scopes,
                     signTime: new Date(),
                 };
-                const access_token = this.sign(principle)
-                const refresh_token = this.sign(tokenData);
+                const access_token = jwt.sign(principle, this.options.secretOrPrivateKey, Object.assign({}, this.options.signOptions, {expiresIn: 3600 * 24 * 30}))
+                const refresh_token = jwt.sign(tokenData, this.options.secretOrPrivateKey, this.options.signOptions);
                 resolve({
                     access_token: access_token,
                     refresh_token: refresh_token,
-                    expires_in: 3600
+                    expires_in: this.options.signOptions.expiresIn || 36000
                 });
             } catch (e) {
                 reject(e)
@@ -59,7 +61,11 @@ export class JwtStore implements TokenStoreInterface {
     getCodeData(code: string, allParams: any): Promise<CodeData> {
         return new Promise((resolve, reject) => {
             try {
-                const data: CodeData = this.verify(code);
+                const data: CodeData = jwt.verify(
+                    code,
+                    this.options.publicKey || (this.options.secretOrPrivateKey as any),
+                    this.options.verifyOptions
+                ) as CodeData;
                 resolve(data)
             } catch (e) {
                 reject(e)
@@ -70,7 +76,10 @@ export class JwtStore implements TokenStoreInterface {
     getRefreshTokenData(refresh_token: string, allParams: any): Promise<TokenData> {
         return new Promise((resolve, reject) => {
             try {
-                const data: TokenData = this.verify(refresh_token);
+                const data: TokenData = jwt.verify(refresh_token,
+                    this.options.publicKey || (this.options.secretOrPrivateKey as any),
+                    this.options.verifyOptions
+                ) as TokenData;
                 resolve(data)
             } catch (e) {
                 reject(e)
@@ -78,32 +87,4 @@ export class JwtStore implements TokenStoreInterface {
         })
     }
 
-
-    private sign(payload: string | Object | Buffer, options?: jwt.SignOptions): string {
-        const signOptions = options
-            ? {
-                ...(this.options.signOptions || {}),
-                ...options
-            }
-            : this.options.signOptions;
-        return jwt.sign(payload, this.options.secretOrPrivateKey, signOptions);
-    }
-
-    private verify<T extends object = any>(token: string, options?: jwt.VerifyOptions): T {
-        const verifyOptions = options
-            ? {
-                ...(this.options.verifyOptions || {}),
-                ...options
-            }
-            : this.options.verifyOptions;
-        return jwt.verify(
-            token,
-            this.options.publicKey || (this.options.secretOrPrivateKey as any),
-            verifyOptions
-        ) as T;
-    }
-
-    private decode(token: string, options?: jwt.DecodeOptions): null | { [key: string]: any } | string {
-        return jwt.decode(token, options);
-    }
 }

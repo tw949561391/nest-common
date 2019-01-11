@@ -4,7 +4,7 @@ import {ConfigService} from "./service/config.service";
 
 @Global()
 @Module({})
-export class MpConfigModule {
+export class ConfigModule {
     private static exportProviders: Provider[] = [];
 
     public static register(option?: ConfigOption): DynamicModule {
@@ -15,7 +15,7 @@ export class MpConfigModule {
             },
         ];
         return {
-            module: MpConfigModule,
+            module: ConfigModule,
             providers: this.exportProviders,
             exports: [ConfigService],
         }

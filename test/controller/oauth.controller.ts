@@ -1,5 +1,5 @@
 import {Controller, Get, Req, UseGuards} from "@nestjs/common";
-import {JwtAuthGuard, OauthService, OauthType} from "../../src/oauth";
+import {JwtAuthGuard, OauthService, OauthType, Principle} from "../../src";
 
 @Controller()
 export class OauthController {
@@ -37,7 +37,7 @@ export class OauthController {
 
     @Get('me1')
     @UseGuards(JwtAuthGuard('a', 'b', 'ff'))
-    async me1(@Req() req: any) {
+    async me1(@Req() req: any, user: Principle) {
         return {}
     }
 }
