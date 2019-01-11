@@ -10,7 +10,7 @@ import {
     TokenStoreInterface
 } from "../common/oauth.interface";
 
-export class OauthService implements OauthInterface {
+export class OauthServerInstance implements OauthInterface {
     private oauthStore: OauthStoreInterface;
     private tokenStore: TokenStoreInterface;
 

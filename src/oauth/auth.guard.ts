@@ -6,7 +6,6 @@ import {
 import {AuthGuard} from '@nestjs/passport';
 import {Principle} from "./enity/principle";
 
-@Injectable()
 export class _JwtAuthGuard_ extends AuthGuard('jwt') {
     private scopes: Array<string>;
 

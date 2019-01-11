@@ -4,7 +4,6 @@ import {OauthClient, OauthStoreInterface} from "../../src";
 @Injectable()
 export class OauthStoreService implements OauthStoreInterface {
     constructor() {
-        console.log('create OauthStoreService')
     }
 
     async getClient(client_id: string, scope: string, allParams?: any): Promise<OauthClient> {

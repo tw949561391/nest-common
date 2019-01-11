@@ -1,15 +1,15 @@
-import {Controller, Get, Req, UseGuards} from "@nestjs/common";
-import {JwtAuthGuard, OauthService, OauthType, Principle} from "../../src";
+import {All, Controller, Get, Req, UseGuards} from "@nestjs/common";
+import {JwtAuthGuard, OauthServerInstance, OauthType, Principle} from "../../src";
 
 @Controller()
 export class OauthController {
 
-    constructor(private oauthService: OauthService) {
+    constructor(private oauthService: OauthServerInstance) {
     }
 
 
     @Get('login')
-    async login() {
+    async login(@Req() request) {
         const code = await this.oauthService.authorizationCode({
             client_id: 'client_id',
             username: 'username',
@@ -26,17 +26,35 @@ export class OauthController {
             grant_type: OauthType.AuthorizationCode,
             state: 'state'
         });
-        return token
+
+        const token2 = await this.oauthService.token({
+            username: 'username',
+            password: 'password',
+            client_id: 'client_id',
+            client_secret: 'client_secret',
+            grant_type: OauthType.Password,
+            state: 'asda',
+            scope: 'a,b,c'
+        });
+
+        const token3 = await this.oauthService.token({
+            client_id: 'client_id',
+            client_secret: 'client_secret',
+            grant_type: OauthType.RefreshToken,
+            state: 'asdaasd',
+            refresh_token: token.refresh_token
+        });
+        return {token, token2, token3};
     }
 
-    @Get('me')
-    @UseGuards(JwtAuthGuard)
+    @All('me')
+    @UseGuards(JwtAuthGuard('scope'))
     async me(@Req() req: any) {
         return {}
     }
 
     @Get('me1')
-    @UseGuards(JwtAuthGuard('a', 'b', 'ff'))
+    @UseGuards(JwtAuthGuard('scope'))
     async me1(@Req() req: any, user: Principle) {
         return {}
     }

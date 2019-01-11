@@ -1,17 +1,18 @@
 import {ExtractJwt, Strategy} from 'passport-jwt';
 import {PassportStrategy} from '@nestjs/passport';
-import {Injectable, UnauthorizedException} from '@nestjs/common';
-import {JwtModuleOptions} from '@nestjs/jwt';
-import {Principle} from "..";
+import {Principle, VerifyJwtOptions} from "..";
+import {FromRequestUtil} from "../util/from-request.util";
 
-@Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-    constructor(private jwtOption: JwtModuleOptions) {
+    private logger: any;
+
+    constructor(fromRequest: Set<'body' | 'header' | 'query' | 'cookie'>, private jwtOption: VerifyJwtOptions, log: any) {
         super({
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+            jwtFromRequest: FromRequestUtil.buid(fromRequest),
             secretOrKey: jwtOption.secretOrPrivateKey,
-            jsonWebTokenOptions: jwtOption
+            jsonWebTokenOptions: jwtOption.verifyOptions
         });
+        this.logger = log || console
     }
 
     async validate(payload: Principle) {
