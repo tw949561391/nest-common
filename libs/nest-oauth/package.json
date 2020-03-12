@@ -1,0 +1,29 @@
+{
+  "name": "@miup/nest-oauth",
+  "version": "1.0.0",
+  "description": "",
+  "private": false,
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@nestjs/jwt": "^6.1.2",
+    "@nestjs/passport": "^6.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/passport-jwt": "^3.0.3",
+    "@types/passport-local": "^1.0.33",
+    "@nestjs/common": "*",
+    "@nestjs/core": "*",
+    "reflect-metadata": "*",
+    "rimraf": "*",
+    "rxjs": "*"
+  }
+}

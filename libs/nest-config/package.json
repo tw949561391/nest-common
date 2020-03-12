@@ -1,0 +1,23 @@
+{
+  "name": "@miup/nest-config",
+  "version": "2.0.0",
+  "description": "",
+  "private": false,
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "dotenv-extended": "^2.7.1"
+  },
+  "devDependencies": {
+    "@nestjs/common": "*",
+    "@nestjs/core": "*",
+    "reflect-metadata": "*",
+    "rimraf": "*",
+    "rxjs": "*"
+  }
+}

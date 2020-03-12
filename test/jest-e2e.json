@@ -1,0 +1,21 @@
+{
+  "moduleFileExtensions": [
+    "js",
+    "json",
+    "ts"
+  ],
+  "rootDir": ".",
+  "testEnvironment": "node",
+  "testRegex": ".e2e-spec.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "moduleNameMapper": {
+    "@app/miup-oauth/(.*)": "<rootDir>/../libs/miup-oauth/src/$1",
+    "@app/miup-oauth": "<rootDir>/../libs/miup-oauth/src",
+    "@app/miup-config/(.*)": "<rootDir>/../libs/miup-config/src/$1",
+    "@app/miup-config": "<rootDir>/../libs/miup-config/src",
+    "@miup/nest-log4j/(.*)": "<rootDir>/../libs/nest-log4j/src/$1",
+    "@miup/nest-log4j": "<rootDir>/../libs/nest-log4j/src"
+  }
+}

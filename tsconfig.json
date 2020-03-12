@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "paths": {
+      "@miup/nest-oauth": [
+        "libs/nest-oauth/src"
+      ],
+      "@miup/nest-oauth/*": [
+        "libs/nest-oauth/src/*"
+      ],
+      "@miup/nest-config": [
+        "libs/nest-config/src"
+      ],
+      "@miup/nest-config/*": [
+        "libs/nest-config/src/*"
+      ],
+      "@miup/nest-log4j": [
+        "libs/nest-log4j/src"
+      ],
+      "@miup/nest-log4j/*": [
+        "libs/nest-log4j/src/*"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

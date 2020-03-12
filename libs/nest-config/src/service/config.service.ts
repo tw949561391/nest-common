@@ -1,0 +1,42 @@
+import * as dotenv from 'dotenv-extended';
+import { ConfigOption } from '../index';
+import * as path from 'path';
+import { IDotenvExtendedOptions } from 'dotenv-extended';
+import { Logger } from '@nestjs/common';
+
+export class ConfigService {
+
+  private logger = new Logger(ConfigService.name);
+
+  private readonly envConfig: { [key: string]: string };
+
+  constructor(option: ConfigOption) {
+    const defaultOption = new ConfigOption();
+    option = Object.assign(defaultOption, option);
+    const dotenvOp: IDotenvExtendedOptions = {
+      encoding: option.encoding,
+      silent: true,
+      defaults: path.join(option.path, `${option.basename}.${option.default}.env`),
+      errorOnMissing: false,
+      errorOnExtra: false,
+      includeProcessEnv: false,
+      assignToProcessEnv: true,
+      overrideProcessEnv: false,
+    };
+    if (option.env) {
+      dotenvOp.path = path.join(option.path, `${option.basename}.${option.env}.env`);
+    }
+    this.envConfig = dotenv.load(dotenvOp);
+    this.logger.error('--------');
+  }
+
+  get<T = any>(key: string, defaultValue?: T): T | undefined {
+    const v = this.envConfig[key];
+    if (v) {
+      return (v as unknown) as T;
+    } else {
+      return defaultValue;
+    }
+  }
+}
+

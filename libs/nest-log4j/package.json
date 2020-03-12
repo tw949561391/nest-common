@@ -1,0 +1,21 @@
+{
+  "name": "@miup/nest-log4j",
+  "version": "2.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "log4js": "^6.1.2"
+  },
+  "devDependencies": {
+    "@nestjs/common": "*",
+    "@nestjs/core": "*",
+    "reflect-metadata": "*",
+    "rimraf": "*",
+    "rxjs": "*"
+  }
+}
