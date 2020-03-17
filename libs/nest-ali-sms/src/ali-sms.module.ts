@@ -1,12 +1,23 @@
 import { DynamicModule, Module, ValueProvider } from "@nestjs/common";
 import { ALICLOUD_SMS_MODULE_OPTIONS, AliCloudSmsModuleAsyncOptions, AliCloudSmsModuleOptions } from "./interface";
 import { FactoryProvider } from "@nestjs/common/interfaces";
-import { AliSmsService } from "./ali-sms.service";
+import { AliCloudSmsService } from "./ali-cloud-sms.service";
 
-@Module({})
+@Module({
+  imports: [],
+  providers: [
+    {
+      provide: ALICLOUD_SMS_MODULE_OPTIONS,
+      useFactory: () => ({})
+    },
+    {
+      provide: AliCloudSmsService,
+      useFactory: () => ({})
+    }
+  ],
+  exports: [ALICLOUD_SMS_MODULE_OPTIONS, AliCloudSmsService]
+})
 export class AliCloudSmsModule {
-
-
   public static register(options: AliCloudSmsModuleOptions) {
     const configProvider: ValueProvider = {
       useValue: options || {},
@@ -14,9 +25,9 @@ export class AliCloudSmsModule {
     };
 
     const smsServiceProvider: FactoryProvider = {
-      provide: AliSmsService,
+      provide: AliCloudSmsService,
       useFactory: (options: AliCloudSmsModuleOptions) => {
-        return new AliSmsService(options);
+        return new AliCloudSmsService(options);
       },
       inject: [ALICLOUD_SMS_MODULE_OPTIONS]
     };
@@ -41,9 +52,9 @@ export class AliCloudSmsModule {
       inject: options.inject || []
     };
     const smsServiceProvider: FactoryProvider = {
-      provide: AliSmsService,
+      provide: AliCloudSmsService,
       useFactory: (options: AliCloudSmsModuleOptions) => {
-        return new AliSmsService(options);
+        return new AliCloudSmsService(options);
       },
       inject: [ALICLOUD_SMS_MODULE_OPTIONS]
     };
@@ -53,7 +64,7 @@ export class AliCloudSmsModule {
       ],
       providers: [
         configProvider,
-        smsServiceProvider,
+        smsServiceProvider
       ],
       exports: [
         smsServiceProvider

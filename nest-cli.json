@@ -37,8 +37,18 @@
       "compilerOptions": {
         "tsConfigPath": "libs/nest-ali-sms/tsconfig.lib.json"
       }
+    },
+    "nest-redis": {
+      "type": "library",
+      "root": "libs/nest-redis",
+      "entryFile": "index",
+      "sourceRoot": "libs/nest-redis/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/nest-redis/tsconfig.lib.json"
+      }
     }
   },
   "compilerOptions": {
+    "webpack": false
   }
 }

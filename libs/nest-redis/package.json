@@ -1,0 +1,28 @@
+{
+  "name": "@miup/nest-redis",
+  "version": "2.0.2",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tw949561391/nest-common.git"
+  },
+  "description": "",
+  "private": false,
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc && npm publish --access public"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ioredis": "*"
+  },
+  "devDependencies": {
+    "@types/passport-jwt": "*",
+    "@types/passport-local": "*",
+    "@nestjs/common": "*",
+    "@nestjs/core": "*",
+    "reflect-metadata": "*",
+    "rimraf": "*",
+    "rxjs": "*"
+  }
+}

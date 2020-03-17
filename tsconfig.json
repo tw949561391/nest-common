@@ -34,6 +34,12 @@
       ],
       "@miup/nest-ali-sms/*": [
         "libs/nest-ali-sms/src/*"
+      ],
+      "@miup/nest-redis": [
+        "libs/nest-redis/src"
+      ],
+      "@miup/nest-redis/*": [
+        "libs/nest-redis/src/*"
       ]
     }
   },
