@@ -1,7 +1,13 @@
 {
   "name": "@miup/nest-config",
-  "version": "2.0.1",
+  "version": "2.0.3",
   "description": "",
+  "keywords": [
+    "miup",
+    "nestjs",
+    "nest",
+    "config"
+  ],
   "private": false,
   "main": "dist/index.js",
   "scripts": {

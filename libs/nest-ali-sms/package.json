@@ -1,7 +1,20 @@
 {
   "name": "@miup/nest-ali-sms",
-  "version": "2.0.1",
+  "version": "2.0.3",
+  "keywords": [
+    "ali",
+    "sms",
+    "短信",
+    "miup",
+    "nestjs",
+    "nest"
+  ],
   "description": "",
+  "homepage": "https://github.com/tw949561391/nest-common/tree/master/libs/nest-ali-sms",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tw949561391/nest-common/tree/master/libs/nest-ali-sms"
+  },
   "private": false,
   "main": "dist/index.js",
   "scripts": {
