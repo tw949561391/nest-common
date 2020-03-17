@@ -1,18 +1,28 @@
-import { Controller, Get, Injectable } from '@nestjs/common';
-import { AppService } from './app.service';
-import { ConfigService } from '@miup/nest-config';
-import { Log4j } from '@miup/nest-log4j';
+import { All, Controller, Get, Req, UseGuards } from "@nestjs/common";
+import { JwtAuthGuard, OauthServer, OauthType, Principle, UserInfo } from "@miup/nest-oauth";
+import { TokenGuard } from "@miup/nest-oauth";
 
-@Controller()
+@Controller("demo")
 export class AppController {
-  constructor(private readonly appService: AppService,
-              private log: Log4j,
-              private readonly configService: ConfigService) {
+
+  constructor(private oauthService: OauthServer) {
   }
 
-  @Get()
-  getHello(): string {
-    this.log.debug('---------');
-    return this.appService.getHello();
+  @Get("login")
+  @UseGuards(TokenGuard)
+  async login(@Req() request) {
+    return request.token;
+  }
+
+  @All("me")
+  @UseGuards(JwtAuthGuard("scope"))
+  async me(@Req() req: any) {
+    return {};
+  }
+
+  @Get("me1")
+  @UseGuards(JwtAuthGuard("scope"))
+  async me1(@UserInfo() user: Principle) {
+    return user;
   }
 }

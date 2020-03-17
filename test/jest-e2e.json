@@ -16,6 +16,8 @@
     "@app/miup-config/(.*)": "<rootDir>/../libs/miup-config/src/$1",
     "@app/miup-config": "<rootDir>/../libs/miup-config/src",
     "@miup/nest-log4j/(.*)": "<rootDir>/../libs/nest-log4j/src/$1",
-    "@miup/nest-log4j": "<rootDir>/../libs/nest-log4j/src"
+    "@miup/nest-log4j": "<rootDir>/../libs/nest-log4j/src",
+    "@miup/nest-ali-sms/(.*)": "<rootDir>/../libs/nest-ali-sms/src/$1",
+    "@miup/nest-ali-sms": "<rootDir>/../libs/nest-ali-sms/src"
   }
 }

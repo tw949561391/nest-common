@@ -1,12 +1,15 @@
-import { DynamicModule, Global, Module, ValueProvider } from '@nestjs/common';
-import { FactoryProvider, ModuleMetadata } from '@nestjs/common/interfaces';
-import { OauthServer } from './service/oauth-server';
-import { OauthStoreInterface, TokenStoreInterface } from './common/oauth.interface';
-import { JwtStore } from './service/jwt.store';
-import * as jwt from 'jsonwebtoken';
+import { DynamicModule, Global, Module, ValueProvider, Logger, LoggerService } from "@nestjs/common";
+import { FactoryProvider, ModuleMetadata } from "@nestjs/common/interfaces";
+import { OauthServer } from "./service/oauth-server";
+import { OauthStoreInterface, TokenStoreInterface } from "./common/oauth.interface";
+import { JwtStore } from "./service/jwt.store";
+import * as jwt from "jsonwebtoken";
+import { OauthStrategy } from "./service/oauth.strategy";
+import { PassportModule } from "@nestjs/passport";
+import { TokenGuard } from "./token.guard";
 
-export const OAUTH_SERVER_MODULE_OPTIONS = 'OAUTH_SERVER_MODULE_OPTIONS';
-export const OAUTH_MODULE_TOKEN_STORE = 'OAUTH_MODULE_TOKEN_STORE';
+export const OAUTH_SERVER_MODULE_OPTIONS = "OAUTH_SERVER_MODULE_OPTIONS";
+export const OAUTH_MODULE_TOKEN_STORE = "OAUTH_MODULE_TOKEN_STORE";
 
 
 export interface SignJwtOptions {
@@ -18,12 +21,11 @@ export interface SignJwtOptions {
 
 export interface OauthServerModuleOptions {
   oauthStore: OauthStoreInterface,
-  jwt: SignJwtOptions,
-  logger?: any
+  jwt: SignJwtOptions
 }
 
 
-export interface OauthServerModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
+export interface OauthServerModuleAsyncOptions extends Pick<ModuleMetadata, "imports"> {
   useFactory?: (
     ...args: any[]
   ) => Promise<OauthServerModuleOptions> | OauthServerModuleOptions;
@@ -38,15 +40,15 @@ export class OauthServerModule {
     const configProvider: FactoryProvider = {
       provide: OAUTH_SERVER_MODULE_OPTIONS,
       useFactory: options.useFactory,
-      inject: options.inject || [],
+      inject: options.inject || []
     };
 
     const oauthServiceProvider: FactoryProvider = {
       provide: OauthServer,
       useFactory: (option: OauthServerModuleOptions, tokenStore: TokenStoreInterface) => {
-        return new OauthServer(option.oauthStore, tokenStore, option.logger);
+        return new OauthServer(option.oauthStore, tokenStore);
       },
-      inject: [OAUTH_SERVER_MODULE_OPTIONS, OAUTH_MODULE_TOKEN_STORE],
+      inject: [OAUTH_SERVER_MODULE_OPTIONS, OAUTH_MODULE_TOKEN_STORE]
     };
 
     const tokenStoreProvider: FactoryProvider = {
@@ -54,22 +56,27 @@ export class OauthServerModule {
       useFactory: (options: OauthServerModuleOptions) => {
         return new JwtStore(options.jwt);
       },
-      inject: [OAUTH_SERVER_MODULE_OPTIONS],
+      inject: [OAUTH_SERVER_MODULE_OPTIONS]
     };
 
     return {
       module: OauthServerModule,
       imports: [
-        ...(options.imports || []),
+        PassportModule.register({
+          property: "token"
+        }),
+        ...(options.imports || [])
       ],
       providers: [
         configProvider,
         oauthServiceProvider,
         tokenStoreProvider,
+        OauthStrategy,
+        TokenGuard
       ],
       exports: [
-        oauthServiceProvider,
-      ],
+        oauthServiceProvider
+      ]
     };
   }
 
@@ -78,14 +85,14 @@ export class OauthServerModule {
 
     const configProvider: ValueProvider = {
       provide: OAUTH_SERVER_MODULE_OPTIONS,
-      useValue: options,
+      useValue: options
     };
     const oauthServiceProvider: FactoryProvider = {
       provide: OauthServer,
-      useFactory: (option: OauthServerModuleOptions, tokenStore: TokenStoreInterface) => {
-        return new OauthServer(option.oauthStore, tokenStore, option.logger);
+      useFactory: (option: OauthServerModuleOptions, tokenStore: TokenStoreInterface, log: LoggerService) => {
+        return new OauthServer(option.oauthStore, tokenStore);
       },
-      inject: [OAUTH_SERVER_MODULE_OPTIONS, OAUTH_MODULE_TOKEN_STORE],
+      inject: [OAUTH_SERVER_MODULE_OPTIONS, OAUTH_MODULE_TOKEN_STORE, Logger]
     };
 
     const tokenStoreProvider: FactoryProvider = {
@@ -93,20 +100,26 @@ export class OauthServerModule {
       useFactory: (options: OauthServerModuleOptions) => {
         return new JwtStore(options.jwt);
       },
-      inject: [OAUTH_SERVER_MODULE_OPTIONS],
+      inject: [OAUTH_SERVER_MODULE_OPTIONS]
     };
 
     return {
       module: OauthServerModule,
-      imports: [],
+      imports: [
+        PassportModule.register({
+          property: "token"
+        })
+      ],
       providers: [
         configProvider,
         oauthServiceProvider,
         tokenStoreProvider,
+        OauthStrategy,
+        TokenGuard
       ],
       exports: [
-        oauthServiceProvider,
-      ],
+        oauthServiceProvider
+      ]
     };
   }
 

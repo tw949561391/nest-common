@@ -1,39 +1,35 @@
-import { ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { Principle } from '.';
+import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { AuthGuard } from "@nestjs/passport";
+import { Principle } from ".";
 
 @Injectable()
-export class MiupJwtAuthGuard extends AuthGuard('jwt') {
-  private scopes: Array<string>;
+export class JwtAuthGuardClass extends AuthGuard("jwt") {
+  private readonly scopes: Array<string>;
 
   constructor(...scopes) {
     super();
     this.scopes = scopes.sort();
   }
 
-  canActivate(context: ExecutionContext) {
-    return super.canActivate(context);
-  }
-
   handleRequest(err, user, info) {
     if (err || !user) {
-      throw err || new UnauthorizedException();
+      throw err || new UnauthorizedException(info.message);
     }
-    const princple: Principle = user as Principle;
-    this.validateScope(princple);
+    const principle: Principle = user as Principle;
+    this.validateScope(principle);
     return user;
   }
 
 
-  private validateScope(princple: Principle) {
+  private validateScope(principle: Principle) {
     if (this.scopes.length === 0) {
       return;
     }
-    if (!princple.scopes || princple.scopes.length <= 0) {
+    if (!principle.scopes || principle.scopes.length <= 0) {
       throw new UnauthorizedException(`no scope all`);
     }
     for (const reqScop of this.scopes) {
-      if (!princple.scopes.includes(reqScop)) {
+      if (!principle.scopes.includes(reqScop)) {
         throw new UnauthorizedException(`no scope [${reqScop}]`);
       }
     }
@@ -42,5 +38,5 @@ export class MiupJwtAuthGuard extends AuthGuard('jwt') {
 
 
 export function JwtAuthGuard(...scopes) {
-  return new MiupJwtAuthGuard(...scopes);
+  return new JwtAuthGuardClass(...scopes);
 }

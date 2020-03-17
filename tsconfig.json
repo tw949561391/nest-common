@@ -28,6 +28,12 @@
       ],
       "@miup/nest-log4j/*": [
         "libs/nest-log4j/src/*"
+      ],
+      "@miup/nest-ali-sms": [
+        "libs/nest-ali-sms/src"
+      ],
+      "@miup/nest-ali-sms/*": [
+        "libs/nest-ali-sms/src/*"
       ]
     }
   },

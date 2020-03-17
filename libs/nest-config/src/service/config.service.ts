@@ -1,8 +1,8 @@
-import * as dotenv from 'dotenv-extended';
-import { ConfigOption } from '../index';
-import * as path from 'path';
-import { IDotenvExtendedOptions } from 'dotenv-extended';
-import { Logger } from '@nestjs/common';
+import * as dotenv from "dotenv-extended";
+import { ConfigOption } from "../index";
+import * as path from "path";
+import { IDotenvExtendedOptions } from "dotenv-extended";
+import { Logger } from "@nestjs/common";
 
 export class ConfigService {
 
@@ -11,7 +11,13 @@ export class ConfigService {
   private readonly envConfig: { [key: string]: string };
 
   constructor(option: ConfigOption) {
-    const defaultOption = new ConfigOption();
+    const defaultOption = {
+      path: path.join(process.cwd(), "env"),
+      encoding: "utf-8",
+      basename: "environment",
+      default: "default",
+      env:process.env.NODE_ENV
+    };
     option = Object.assign(defaultOption, option);
     const dotenvOp: IDotenvExtendedOptions = {
       encoding: option.encoding,
@@ -21,13 +27,12 @@ export class ConfigService {
       errorOnExtra: false,
       includeProcessEnv: false,
       assignToProcessEnv: true,
-      overrideProcessEnv: false,
+      overrideProcessEnv: false
     };
     if (option.env) {
       dotenvOp.path = path.join(option.path, `${option.basename}.${option.env}.env`);
     }
     this.envConfig = dotenv.load(dotenvOp);
-    this.logger.error('--------');
   }
 
   get<T = any>(key: string, defaultValue?: T): T | undefined {

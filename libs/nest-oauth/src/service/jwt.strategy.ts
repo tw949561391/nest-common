@@ -1,22 +1,21 @@
-import { Strategy } from 'passport-jwt';
-import { PassportStrategy } from '@nestjs/passport';
-import { Principle, VerifyJwtOptions } from '..';
-import { FromRequestUtil } from '../util/from-request.util';
-import { Logger } from '@nestjs/common';
+import {Strategy} from 'passport-jwt';
+import {PassportStrategy} from '@nestjs/passport';
+import {Principle, VerifyJwtOptions} from '..';
+import {FromRequestUtil} from "..";
+import {Logger, LoggerService} from '@nestjs/common';
 
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  private logger: any;
+    private logger: LoggerService = new Logger(JwtStrategy.name);
 
-  constructor(fromRequest: Set<'body' | 'header' | 'query' | 'cookie'>, private jwtOption: VerifyJwtOptions, log: any) {
-    super({
-      jwtFromRequest: FromRequestUtil.buid(fromRequest),
-      secretOrKey: jwtOption.secretOrPrivateKey,
-      jsonWebTokenOptions: jwtOption.verifyOptions,
-    });
-    this.logger = log || Logger;
-  }
+    constructor(fromRequest: Set<'body' | 'header' | 'query' | 'cookie'>, private jwtOption: VerifyJwtOptions) {
+        super({
+            jwtFromRequest: FromRequestUtil.buid(fromRequest),
+            secretOrKey: jwtOption.secretOrPrivateKey,
+            jsonWebTokenOptions: jwtOption.verifyOptions,
+        });
+    }
 
-  async validate(payload: Principle) {
-    return payload;
-  }
+    async validate(payload: Principle) {
+        return payload;
+    }
 }

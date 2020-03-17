@@ -1,28 +1,28 @@
-import { DynamicModule, Global, Module, ValueProvider } from '@nestjs/common';
-import { FactoryProvider, ModuleMetadata } from '@nestjs/common/interfaces';
-import { JwtModule, JwtModuleAsyncOptions, JwtModuleOptions } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
-import { JwtStrategy } from './service/jwt.strategy';
-import * as jwt from 'jsonwebtoken';
+import { DynamicModule, Global, Module, ValueProvider } from "@nestjs/common";
+import { FactoryProvider, ModuleMetadata } from "@nestjs/common/interfaces";
+import { JwtModule, JwtModuleAsyncOptions, JwtModuleOptions } from "@nestjs/jwt";
+import { PassportModule } from "@nestjs/passport";
+import { JwtStrategy } from "./service/jwt.strategy";
+import * as jwt from "jsonwebtoken";
+import { JwtAuthGuardClass } from "./auth.guard";
 
-export const OAUTH_CLIENT_MODULE_OPTIONS = 'OAUTH_CLIENT_MODULE_OPTIONS';
+export const OAUTH_CLIENT_MODULE_OPTIONS = "OAUTH_CLIENT_MODULE_OPTIONS";
 
 
 export interface VerifyJwtOptions {
-  secretOrPrivateKey?: jwt.Secret;
+  secretOrPrivateKey: jwt.Secret;
   publicKey?: string | Buffer;
   verifyOptions?: jwt.VerifyOptions;
 }
 
 export interface OauthClientModuleOptions {
-  logger?: any
-  fromRequest?: Array<'body' | 'header' | 'query' | 'cookie'>,
+  fromRequest?: Array<"body" | "header" | "query" | "cookie">,
   defaultScopes?: string;
-  jwt?: VerifyJwtOptions
+  jwt: VerifyJwtOptions
 }
 
 
-export interface OauthClientModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
+export interface OauthClientModuleAsyncOptions extends Pick<ModuleMetadata, "imports"> {
   useFactory?: (
     ...args: any[]
   ) => Promise<OauthClientModuleOptions> | OauthClientModuleOptions;
@@ -37,58 +37,61 @@ export class OauthClientModule {
     const configProvider: FactoryProvider = {
       provide: OAUTH_CLIENT_MODULE_OPTIONS,
       useFactory: options.useFactory,
-      inject: options.inject || [],
+      inject: options.inject || []
     };
     const jwtStrategyProvider: FactoryProvider = {
       provide: JwtStrategy,
       useFactory: (options: OauthClientModuleOptions) => {
         const fromTypes = new Set(options.fromRequest || []);
-        return new JwtStrategy(fromTypes, options.jwt, options.logger);
+        return new JwtStrategy(fromTypes, options.jwt);
       },
-      inject: [OAUTH_CLIENT_MODULE_OPTIONS],
+      inject: [OAUTH_CLIENT_MODULE_OPTIONS]
     };
     return {
       module: OauthClientModule,
       imports: [
         ...(options.imports || []),
-        PassportModule.register({ defaultStrategy: 'jwt' }),
+        PassportModule.register({ defaultStrategy: "jwt" }),
         JwtModule.registerAsync({
           useFactory: (options: OauthClientModuleOptions) => {
-            return options.jwt as JwtModuleOptions;
+            return options.jwt;
           },
-          inject: [OAUTH_CLIENT_MODULE_OPTIONS],
-        } as JwtModuleAsyncOptions),
+          inject: [OAUTH_CLIENT_MODULE_OPTIONS]
+        } as JwtModuleAsyncOptions)
       ],
       providers: [
         jwtStrategyProvider,
         configProvider,
+        JwtAuthGuardClass
       ],
       exports: [
         jwtStrategyProvider,
-      ],
+        configProvider
+      ]
     };
   }
 
   public static register(options: OauthClientModuleOptions) {
     const fromTypes = new Set(options.fromRequest || []);
-    const jwtStrategy = new JwtStrategy(fromTypes, options.jwt, options.logger);
+    const jwtStrategy = new JwtStrategy(fromTypes, options.jwt);
     const jwtStrategyProvider: ValueProvider = {
       provide: JwtStrategy,
-      useValue: jwtStrategy,
+      useValue: jwtStrategy
     };
 
     return {
       module: OauthClientModule,
       imports: [
-        PassportModule.register({ defaultStrategy: 'jwt' }),
-        JwtModule.register(options.jwt),
+        PassportModule.register({ defaultStrategy: "jwt" }),
+        JwtModule.register(options.jwt)
       ],
       providers: [
         jwtStrategyProvider,
+        JwtAuthGuardClass
       ],
       exports: [
-        jwtStrategyProvider,
-      ],
+        jwtStrategyProvider
+      ]
     };
 
   }

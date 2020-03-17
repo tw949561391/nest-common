@@ -1,25 +1,25 @@
 {
   "name": "@miup/nest-oauth",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "",
   "private": false,
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc && npm publish --access public"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@nestjs/jwt": "^6.1.2",
-    "@nestjs/passport": "^6.2.0",
-    "jsonwebtoken": "^8.5.1",
-    "passport": "^0.4.1",
-    "passport-jwt": "^4.0.0",
-    "passport-local": "^1.0.0"
+    "@nestjs/jwt": "*",
+    "@nestjs/passport": "*",
+    "jsonwebtoken": "*",
+    "passport": "*",
+    "passport-jwt": "*",
+    "passport-local": "*"
   },
   "devDependencies": {
-    "@types/passport-jwt": "^3.0.3",
-    "@types/passport-local": "^1.0.33",
+    "@types/passport-jwt": "*",
+    "@types/passport-local": "*",
     "@nestjs/common": "*",
     "@nestjs/core": "*",
     "reflect-metadata": "*",

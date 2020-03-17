@@ -1,7 +1,8 @@
 {
-  "name": "@miup/nest-log4j",
+  "name": "@miup/nest-ali-sms",
   "version": "2.0.0",
   "description": "",
+  "private": false,
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc && npm publish --access public"
@@ -9,11 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "log4js": "*"
+    "@alicloud/sms-sdk": "*"
   },
   "devDependencies": {
-    "@nestjs/common": "*",
-    "@nestjs/core": "*",
+    "@nestjs/common": "^7.0.1",
+    "@nestjs/core": "^7.0.1",
     "reflect-metadata": "*",
     "rimraf": "*",
     "rxjs": "*"
