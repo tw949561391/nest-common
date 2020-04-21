@@ -2,21 +2,8 @@ import { DynamicModule, FactoryProvider, Global, Module, ValueProvider } from "@
 import { REDIS_MODULE_OPTIONS, RedisModuleAsyncOptions, RedisModuleOptions } from "./redis.interface";
 import { RedisService } from "./redis.service";
 
-@Module({
-  imports: [],
-  providers: [
-    {
-      provide: REDIS_MODULE_OPTIONS,
-      useFactory: () => ({})
-    },
-    {
-      provide: RedisService,
-      useFactory: () => ({})
-    }
-
-  ],
-  exports: [REDIS_MODULE_OPTIONS, RedisService]
-})
+@Global()
+@Module({})
 export class RedisModule {
 
   public static registerAsync(options: RedisModuleAsyncOptions): DynamicModule {

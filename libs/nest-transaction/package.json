@@ -1,10 +1,10 @@
 {
-  "name": "@miup/nest-redis",
-  "version": "2.0.4",
-  "homepage": "https://github.com/tw949561391/nest-common/tree/master/libs/nest-redis",
+  "name": "@miup/nest-transaction",
+  "version": "2.0.2",
+  "homepage": "https://github.com/tw949561391/nest-common/tree/master/libs/nest-transaction",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tw949561391/nest-common/tree/master/libs/nest-redis"
+    "url": "https://github.com/tw949561391/nest-common/tree/master/libs/nest-transaction"
   },
   "description": "",
   "private": false,
@@ -15,15 +15,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ioredis": "*"
+    "typeorm-transactional-cls-hooked": "*"
   },
   "devDependencies": {
-    "@types/passport-jwt": "*",
-    "@types/passport-local": "*",
     "@nestjs/common": "*",
     "@nestjs/core": "*",
     "reflect-metadata": "*",
     "rimraf": "*",
     "rxjs": "*"
+  },
+  "optionalDependencies": {
+    "typeorm": "*"
   }
 }

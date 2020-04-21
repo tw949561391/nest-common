@@ -1,22 +1,10 @@
-import { DynamicModule, Module, ValueProvider } from "@nestjs/common";
+import { DynamicModule, Global, Module, ValueProvider } from "@nestjs/common";
 import { ALICLOUD_SMS_MODULE_OPTIONS, AliCloudSmsModuleAsyncOptions, AliCloudSmsModuleOptions } from "./interface";
 import { FactoryProvider } from "@nestjs/common/interfaces";
 import { AliCloudSmsService } from "./ali-cloud-sms.service";
 
-@Module({
-  imports: [],
-  providers: [
-    {
-      provide: ALICLOUD_SMS_MODULE_OPTIONS,
-      useFactory: () => ({})
-    },
-    {
-      provide: AliCloudSmsService,
-      useFactory: () => ({})
-    }
-  ],
-  exports: [ALICLOUD_SMS_MODULE_OPTIONS, AliCloudSmsService]
-})
+@Global()
+@Module({})
 export class AliCloudSmsModule {
   public static register(options: AliCloudSmsModuleOptions) {
     const configProvider: ValueProvider = {
@@ -42,7 +30,6 @@ export class AliCloudSmsModule {
         smsServiceProvider
       ]
     };
-
   }
 
   public static registerAsync(options: AliCloudSmsModuleAsyncOptions): DynamicModule {

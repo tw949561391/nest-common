@@ -1,9 +1,9 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { AuthGuard } from "@nestjs/passport";
-import { Principle } from ".";
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { Principle } from '../index';
 
 @Injectable()
-export class JwtAuthGuardClass extends AuthGuard("jwt") {
+export class JwtAuthGuardClass extends AuthGuard('jwt') {
   private readonly scopes: Array<string>;
 
   constructor(...scopes) {
@@ -13,7 +13,7 @@ export class JwtAuthGuardClass extends AuthGuard("jwt") {
 
   handleRequest(err, user, info) {
     if (err || !user) {
-      throw err || new UnauthorizedException(info.message);
+      throw err || new UnauthorizedException((info || {}).message);
     }
     const principle: Principle = user as Principle;
     this.validateScope(principle);
@@ -37,6 +37,6 @@ export class JwtAuthGuardClass extends AuthGuard("jwt") {
 }
 
 
-export function JwtAuthGuard(...scopes) {
+export function JwtOAuthGuard(...scopes) {
   return new JwtAuthGuardClass(...scopes);
 }

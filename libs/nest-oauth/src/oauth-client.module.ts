@@ -1,10 +1,10 @@
-import { DynamicModule, Global, Module, ValueProvider } from "@nestjs/common";
-import { FactoryProvider, ModuleMetadata } from "@nestjs/common/interfaces";
-import { JwtModule, JwtModuleAsyncOptions, JwtModuleOptions } from "@nestjs/jwt";
-import { PassportModule } from "@nestjs/passport";
-import { JwtStrategy } from "./service/jwt.strategy";
-import * as jwt from "jsonwebtoken";
-import { JwtAuthGuardClass } from "./auth.guard";
+import { DynamicModule, Global, Module, ValueProvider } from '@nestjs/common';
+import { FactoryProvider, ModuleMetadata } from '@nestjs/common/interfaces';
+import { JwtModule, JwtModuleAsyncOptions } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
+import { JwtStrategy } from './strategy/jwt.strategy';
+import * as jwt from 'jsonwebtoken';
+import { JwtAuthGuardClass } from './guard/auth.guard';
 
 export const OAUTH_CLIENT_MODULE_OPTIONS = "OAUTH_CLIENT_MODULE_OPTIONS";
 

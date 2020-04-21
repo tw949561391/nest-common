@@ -1,28 +1,25 @@
-import { All, Controller, Get, Req, UseGuards } from "@nestjs/common";
-import { JwtAuthGuard, OauthServer, OauthType, Principle, UserInfo } from "@miup/nest-oauth";
-import { TokenGuard } from "@miup/nest-oauth";
+import { All, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { AuthPrinciple, JwtOAuthGuard, JwtTokenGuard, Principle } from '@miup/nest-oauth';
 
-@Controller("demo")
+@Controller('demo')
 export class AppController {
 
-  constructor(private oauthService: OauthServer) {
+
+  @Post('authorie')
+  @UseGuards(JwtTokenGuard('code'))
+  async authorie(@Req() request) {
+    return request.code;
   }
 
-  @Get("login")
-  @UseGuards(TokenGuard)
+  @Post('login')
+  @UseGuards(JwtTokenGuard('token'))
   async login(@Req() request) {
     return request.token;
   }
 
-  @All("me")
-  @UseGuards(JwtAuthGuard("scope"))
-  async me(@Req() req: any) {
-    return {};
-  }
-
-  @Get("me1")
-  @UseGuards(JwtAuthGuard("scope"))
-  async me1(@UserInfo() user: Principle) {
-    return user;
+  @All('me')
+  @UseGuards(JwtOAuthGuard('scope'))
+  async me(@AuthPrinciple() principle: Principle) {
+    return principle;
   }
 }

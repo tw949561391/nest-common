@@ -20,23 +20,25 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@alicloud/sms-sdk": "*",
     "@nestjs/common": "^7.0.0",
     "@nestjs/core": "^7.0.0",
-    "@nestjs/platform-express": "^7.0.0",
-    "reflect-metadata": "^0.1.13",
-    "rimraf": "^3.0.0",
-    "rxjs": "^6.5.4",
-    "dotenv": "^8.2.0",
-    "dotenv-extended": "^2.7.1",
-    "log4js": "^6.1.2",
     "@nestjs/jwt": "^6.1.2",
     "@nestjs/passport": "^6.2.0",
+    "@nestjs/platform-express": "^7.0.0",
+    "dotenv": "^8.2.0",
+    "dotenv-extended": "^2.7.1",
+    "ioredis": "*",
     "jsonwebtoken": "^8.5.1",
+    "log4js": "^6.1.2",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
-    "@alicloud/sms-sdk": "*",
-    "ioredis": "*"
+    "reflect-metadata": "^0.1.13",
+    "rimraf": "^3.0.0",
+    "rxjs": "^6.5.4",
+    "typeorm": "^0.2.24",
+    "typeorm-transactional-cls-hooked": "*"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.0.0",
@@ -87,7 +89,9 @@
       "@miup/nest-ali-sms/(.*)": "<rootDir>/libs/nest-ali-sms/src/$1",
       "@miup/nest-ali-sms": "<rootDir>/libs/nest-ali-sms/src",
       "@miup/nest-redis/(.*)": "<rootDir>/libs/nest-redis/src/$1",
-      "@miup/nest-redis": "<rootDir>/libs/nest-redis/src"
+      "@miup/nest-redis": "<rootDir>/libs/nest-redis/src",
+      "miup/nest-transaction/(.*)": "<rootDir>/libs/nest-transaction/src/$1",
+      "miup/nest-transaction": "<rootDir>/libs/nest-transaction/src"
     }
   }
 }
