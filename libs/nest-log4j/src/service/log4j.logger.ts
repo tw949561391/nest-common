@@ -20,6 +20,11 @@ export class Log4j implements LoggerService {
       replaceConsole: true,
       appenders: {
         stdout: { type: 'stdout' },
+        all: {
+          type: 'dateFile',
+          pattern: '.yyyy-MM-dd',
+          filename: Path.join(options.baseDir, options.pkgName, 'all.log'),
+        },
         debug: {
           type: 'dateFile',
           pattern: '.yyyy-MM-dd',
@@ -47,6 +52,7 @@ export class Log4j implements LoggerService {
         error: { appenders: ['stdout', 'error'], level: 'error' },
         info: { appenders: ['stdout', 'info'], level: 'info' },
         warning: { appenders: ['stdout', 'warning'], level: 'warn' },
+        all: { appenders: ['stdout', 'warning'], level: 'warn' },
       },
     };
     Log4js.configure(defaultConfig);
@@ -54,29 +60,35 @@ export class Log4j implements LoggerService {
     this.logInstanceInfo = Log4js.getLogger('info');
     this.logInstanceWarning = Log4js.getLogger('warning');
     this.logInstanceError = Log4js.getLogger('error');
-    this.logInstanceVerbose = Log4js.getLogger('verbose');
+    this.logInstanceVerbose = Log4js.getLogger('all');
   }
 
   error(message: any, trace?: string, context?: string): any {
     this.logInstanceError.error(this.printMessage(message, clc.red, context));
-    if (trace)
+    this.logInstanceVerbose.error(this.printMessage(message, clc.red, context));
+    if (trace) {
       this.logInstanceError.error(trace);
+      this.logInstanceVerbose.error(trace);
+    }
   }
 
   warn(message: any, context?: string): any {
     this.logInstanceWarning.warn(this.printMessage(message, clc.yellow, context));
+    this.logInstanceVerbose.warn(this.printMessage(message, clc.yellow, context));
   }
 
   log(message: any, context?: string): any {
     this.logInstanceInfo.info(this.printMessage(message, clc.green, context));
+    this.logInstanceVerbose.info(this.printMessage(message, clc.green, context));
   }
 
   debug(message: any, context?: string) {
     this.logInstanceDebug.debug(this.printMessage(message, clc.magentaBright, context));
+    this.logInstanceVerbose.debug(this.printMessage(message, clc.magentaBright, context));
   }
 
   verbose(message: any, context?: string): any {
-    this.logInstanceDebug.debug(this.printMessage(message, clc.cyanBright, context));
+    this.debug(message, context);
   }
 
 
