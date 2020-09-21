@@ -21,7 +21,6 @@ const defaultLog4jOptions = {
   pkgName: 'common',
   pm2: true,
   pm2InstanceVar: 'INSTANCE_ID',
-  levels: 'debug',
   disableClustering: false,
 };
 
