@@ -1,20 +1,28 @@
 import { DynamicModule, FactoryProvider, Global, Module, ValueProvider } from '@nestjs/common';
 import { ModuleMetadata } from '@nestjs/common/interfaces';
 import { Log4j } from './service/log4j.logger';
-import * as pkgReader from 'read-pkg';
 import * as os from 'os';
 import * as Path from 'path';
+import { Levels } from 'log4js';
 
 export const PROVIDER_LOG4J_MODULE_OPTION = 'PROVIDER_LOG4J_MODULE_OPTION';
 
 export interface Log4jOptions {
   baseDir?: string;
   pkgName?: string;
+  pm2?: boolean;
+  pm2InstanceVar?: string;
+  levels?: Levels;
+  disableClustering?: boolean;
 }
 
 const defaultLog4jOptions = {
   baseDir: Path.join(os.homedir(), 'log'),
-  pkgName: '',
+  pkgName: 'common',
+  pm2: true,
+  pm2InstanceVar: 'INSTANCE_ID',
+  levels: 'debug',
+  disableClustering: false,
 };
 
 
@@ -43,13 +51,11 @@ export class Log4jModule {
     return {
       module: Log4jModule,
       providers: [optionsProvider, log4jProvider],
-      exports: [Log4j],
+      exports: [log4jProvider],
     };
   }
 
   public static registerAsync(asyncOption: Log4jAsyncOptions): DynamicModule {
-
-
     const log4jProvider: FactoryProvider = {
       provide: Log4j,
       useFactory: (options: Log4jOptions) => {
@@ -70,7 +76,7 @@ export class Log4jModule {
       module: Log4jModule,
       imports: asyncOption.imports,
       providers: [optionsProvider, log4jProvider],
-      exports: [Log4j],
+      exports: [log4jProvider],
     };
   }
 }

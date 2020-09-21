@@ -4,6 +4,7 @@ import * as Path from 'path';
 import { Log4jOptions, PROVIDER_LOG4J_MODULE_OPTION } from '../index';
 import * as clc from 'cli-color';
 import { isObject } from '@nestjs/common/utils/shared.utils';
+import { Configuration, Levels } from 'log4js';
 
 const yellow = clc.xterm(3);
 
@@ -16,8 +17,7 @@ export class Log4j implements LoggerService {
   private logInstanceVerbose: Log4js.Logger;
 
   constructor(@Inject(PROVIDER_LOG4J_MODULE_OPTION)options: Log4jOptions) {
-    const defaultConfig = {
-      replaceConsole: true,
+    const defaultConfig:Configuration = {
       appenders: {
         stdout: { type: 'stdout' },
         all: {
@@ -54,6 +54,10 @@ export class Log4j implements LoggerService {
         warning: { appenders: ['stdout', 'warning'], level: 'warn' },
         all: { appenders: ['stdout', 'warning'], level: 'warn' },
       },
+      pm2: options.pm2,
+      pm2InstanceVar: options.pm2InstanceVar,
+      levels: options.levels,
+      disableClustering: options.disableClustering,
     };
     Log4js.configure(defaultConfig);
     this.logInstanceDebug = Log4js.getLogger('debug');
